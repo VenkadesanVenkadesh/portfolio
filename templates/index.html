@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ profile.name }} — {{ profile.role }}</title>
+<meta name="description" content="{{ profile.summary }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#top" class="brand">VM<span class="brand-dot">.</span></a>
+    <nav class="nav">
+      <a href="#about"><span class="nav-idx">01</span>about</a>
+      <a href="#index"><span class="nav-idx">02</span>index</a>
+      <a href="#skills"><span class="nav-idx">03</span>skills</a>
+      <a href="#projects"><span class="nav-idx">04</span>projects</a>
+      <a href="#experience"><span class="nav-idx">05</span>experience</a>
+      <a href="#contact"><span class="nav-idx">06</span>contact</a>
+    </nav>
+    <a class="nav-cta" href="mailto:{{ profile.email }}">say hello</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="mono eyebrow">WHO AM I</p>
+      <h1 class="hero-name">{{ profile.name }}</h1>
+      <p class="hero-role">{{ profile.role }} <span class="hero-role-sub">— {{ profile.tagline }}</span></p>
+      <p class="hero-loc mono">{{ profile.location }}</p>
+
+      <div class="hero-links">
+        <a href="mailto:{{ profile.email }}" class="pill">{{ profile.email }}</a>
+        <a href="{{ profile.github }}" target="_blank" rel="noopener" class="pill">GitHub ↗</a>
+        <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" class="pill">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="hero-rule"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="section-head">
+      <span class="mono tag">01</span>
+      <h2>About</h2>
+    </div>
+    <div class="section-body about-body">
+      <p>{{ profile.summary }}</p>
+    </div>
+  </section>
+
+  <!-- LIVE RETRIEVAL INDEX (signature interactive) -->
+  <section id="index" class="section index-section">
+    <div class="section-head">
+      <span class="mono tag">02</span>
+      <h2>Query the Index</h2>
+    </div>
+    <p class="index-hint mono">
+      $ this box is wired to a small Python retrieval endpoint — type a skill, tool, or keyword
+      (e.g. <button type="button" class="chip" data-q="flask">flask</button>
+      <button type="button" class="chip" data-q="rag">rag</button>
+      <button type="button" class="chip" data-q="opencv">opencv</button>) and it ranks matching chunks of this page, live.
+    </p>
+
+    <form id="search-form" class="search-form" autocomplete="off">
+      <span class="prompt mono">query&gt;</span>
+      <input type="text" id="search-input" name="query" placeholder="try: python, machine learning, robotics..." class="mono">
+      <button type="submit" class="btn-run mono">retrieve</button>
+    </form>
+
+    <div id="search-results" class="search-results" aria-live="polite">
+      <p class="search-placeholder mono">// results will render here</p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="section">
+    <div class="section-head">
+      <span class="mono tag">03</span>
+      <h2>Skills Schema</h2>
+    </div>
+    <div class="schema">
+      <div class="schema-row schema-head mono">
+        <span>field</span><span>values</span>
+      </div>
+      {% for group in skills %}
+      <div class="schema-row">
+        <span class="schema-key mono">{{ group.category }}</span>
+        <span class="schema-vals">
+          {% for item in group['items'] %}<span class="tagpill">{{ item }}</span>{% endfor %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <div class="section-head">
+      <span class="mono tag">04</span>
+      <h2>Project Records</h2>
+    </div>
+    <div class="cards">
+      {% for p in projects %}
+      <article class="card" data-id="{{ p.id }}">
+        <div class="card-top">
+          <span class="mono rec">{{ p.id }}</span>
+          <span class="status mono {{ 'status-live' if p.status == 'In Progress' else '' }}">{{ p.status }}</span>
+        </div>
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.description }}</p>
+        <div class="card-tags">
+          {% for t in p.tags %}<span class="tagpill small">{{ t }}</span>{% endfor %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="section">
+    <div class="section-head">
+      <span class="mono tag">05</span>
+      <h2>Experience Log</h2>
+    </div>
+    <div class="timeline">
+      {% for job in experience %}
+      <div class="tl-entry">
+        <div class="tl-dates mono">{{ job.dates }}</div>
+        <div class="tl-body">
+          <h3>{{ job.role }}</h3>
+          <p class="tl-org mono">{{ job.org }}</p>
+          <ul>
+            {% for point in job.points %}<li>{{ point }}</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="edu-cert-grid">
+      <div>
+        <h4 class="mono block-title">education</h4>
+        <p class="edu-degree">{{ education.degree }}</p>
+        <p class="mono edu-meta">{{ education.school }} · {{ education.dates }}</p>
+      </div>
+      <div>
+        <h4 class="mono block-title">certifications</h4>
+        <ul class="cert-list">
+          {% for c in certifications %}<li>{{ c }}</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section contact-section">
+    <div class="section-head">
+      <span class="mono tag">06</span>
+      <h2>Contact</h2>
+    </div>
+    <p class="contact-lede">Open to Python Developer roles — reach out and I'll get back to you.</p>
+
+    <form id="contact-form" class="contact-form">
+      <div class="field">
+        <label for="name" class="mono">name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="field">
+        <label for="email" class="mono">email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="message" class="mono">message</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn-run mono">send message</button>
+      <p id="contact-status" class="mono contact-status" aria-live="polite"></p>
+    </form>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p class="mono">© {{ year }} {{ profile.name }} · built with Flask</p>
+  <div class="footer-links">
+    <a href="mailto:{{ profile.email }}">email</a>
+    <a href="{{ profile.github }}" target="_blank" rel="noopener">github</a>
+    <a href="{{ profile.linkedin }}" target="_blank" rel="noopener">linkedin</a>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
