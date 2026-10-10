@@ -127,12 +127,12 @@ PROJECTS = [
 
 EXPERIENCE = [
     {
-        "role": "Process Associate",
+        "role": "Associate",
         "org": "Prochant India Pvt Ltd, Chennai",
         "dates": "Sept 2024 -- July 2026",
         "points": [
-            "Verified patient insurance coverage, benefits, and policy details for eligibility verification (EV), ensuring compliance and minimizing claim denials.",
-            "Managed and processed fax-based patient information, insurance details, and authorization documents, maintaining accurate records and timely communication.",
+            "Managed and verified high-volume healthcare insurance data while maintaining accuracy and compliance. ",
+            "Performed structured data validation and documentation checks to ensure information consistency.",
         ],
     },
     {
